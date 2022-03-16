@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Project line. This will depend on what RDS you have access to
+#PBS -P <project name>
+
+# To give your job a name, replace "MyJob" with an appropriate name
+#PBS -N <job name>
+
+# Select computing resources
+#PBS -l select=1:ncpus=16:mem=32GB
+#PBS -l walltime=08:00:00
+#PBS -q defaultQ
+#PBS -M <email>
+#PBS -J 1-20
+
+# Changes directory to your execution directory (Leave as is)
+cd $PBS_O_WORKDIR
+
+# Load program(s) and version required
+module load R/4.0.0
+
+#Note: #PBS -J must go from 1-[length of parameters.txt] for this to work
+
+# Example use of an input file with parameters
+input_file=`awk 'NR=='$PBS_ARRAY_INDEX' {print "input/"$1".Rdata"}' parameters.txt`
+
+##### Execute Program #####
+#Set the outputfile to something sensible, here I have named it according to the array index.
+#This output file will be whatever is printed to the screen in R
+Rscript --vanilla <r script>.R --file $input_file --cores $NCPUS
+
+#Also, anything you put in here will output to the standard "jobname.o123456" file, e.g
+echo $input_file $PBS_ARRAY_INDEX $output_file

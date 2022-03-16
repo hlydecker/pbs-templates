@@ -1,0 +1,18 @@
+#!/bin/bash
+#PBS -N rds2hpc_transfer
+#PBS -P <project_name>
+#PBS -q dtq
+#PBS -l select=1:ncpus=2:mem=16gb,walltime=24:00:00
+
+source_dir = /rds/PRJ-wildcount/wildcount_MLWIC
+target_dir = /project/SIHsandbox/camera_traps
+
+echo ------------------------------------------------------
+echo 'RDS to HPC recursive file copy'
+echo 'Source:'
+echo '<source_dir>'
+echo 'Destination:'
+echo '<target_dir>'
+echo ------------------------------------------------------
+
+rsync -rtvxP source_dir target_dir
